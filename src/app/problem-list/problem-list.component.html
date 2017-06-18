@@ -1,0 +1,28 @@
+<ngb-accordion #acc="ngbAccordion">
+  <div *ngFor="let problem of problems">
+    <ngb-panel title={{problem.name}}>
+      <ng-template ngbPanelContent>
+        {{problem.answer}}
+        {{problem.createTimestamp}}
+        <ngb-accordion #acc="ngbAccordion">
+          <ngb-panel title="Jobs">
+            <ng-template ngbPanelContent>
+              <!--<div *ngFor="let job of problem.jobs">-->
+                <ngb-panel title="wow">
+                  <ng-template ngbPanelContent>
+                    <!--{{job.startTime}}
+                    {{job.duration}}-->
+                    wowowowow
+                  </ng-template>
+                </ngb-panel>
+              <!--</div>-->
+            </ng-template>
+          </ngb-panel>
+          <ngb-panel title="Machines">
+            wow
+          </ngb-panel>
+        </ngb-accordion>
+      </ng-template>
+    </ngb-panel>
+  </div>
+</ngb-accordion>
