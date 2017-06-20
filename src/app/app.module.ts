@@ -4,10 +4,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {ProblemListComponent} from "./problem-list/problem-list.component";
 import {routing} from "./app.routing";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {ProblemListService} from "./problem-list/problem-list.service";
 import {HttpModule} from "@angular/http";
 import {JobListComponent} from "./job-list/job-list.component";
+
+import {AccordionModule, ButtonModule, CheckboxModule, TabViewModule} from "primeng/primeng";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -17,12 +21,19 @@ import {JobListComponent} from "./job-list/job-list.component";
   ],
   imports: [
     BrowserModule,
+    FormsModule,
+    BrowserAnimationsModule,
     NgbModule.forRoot(),
     HttpModule,
-    routing
+    TabViewModule,
+    routing,
+    AccordionModule,
+    ButtonModule,
+    CheckboxModule
   ],
   providers: [
-    ProblemListService
+    ProblemListService,
+    NgbModal
   ],
   bootstrap: [AppComponent]
 })

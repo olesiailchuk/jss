@@ -1,28 +1,213 @@
-<ngb-accordion #acc="ngbAccordion">
+<div class="container">
+  <h1>Задачі</h1>
+  <button pButton type="button" label="Згенерувати задачу" (click)="open(content)"></button>
+  <button pButton type="button" label="Ввести задачу" (click)="open(content2)"></button>
   <div *ngFor="let problem of problems">
-    <ngb-panel title={{problem.name}}>
-      <ng-template ngbPanelContent>
-        {{problem.answer}}
-        {{problem.createTimestamp}}
-        <ngb-accordion #acc="ngbAccordion">
-          <ngb-panel title="Jobs">
-            <ng-template ngbPanelContent>
-              <!--<div *ngFor="let job of problem.jobs">-->
-                <ngb-panel title="wow">
-                  <ng-template ngbPanelContent>
-                    <!--{{job.startTime}}
-                    {{job.duration}}-->
-                    wowowowow
-                  </ng-template>
-                </ngb-panel>
-              <!--</div>-->
-            </ng-template>
-          </ngb-panel>
-          <ngb-panel title="Machines">
-            wow
-          </ngb-panel>
-        </ngb-accordion>
-      </ng-template>
-    </ngb-panel>
+    <p-accordion (onOpen)="onTabOpen(problem.id)">
+      <p-accordionTab [header]="problem.name">
+        <div class="alert alert-info" role="alert">
+          <h6>Дата та час створення</h6>
+          {{problem.createTimestamp}}
+        </div>
+        <div class="alert alert-info" role="alert">
+          <h6>Глобальний оптимум</h6>
+          {{problem.answer}}
+        </div>
+        <p-accordion>
+          <p-accordionTab header="Умова">
+            <p-tabView>
+              <p-tabPanel header="Роботи">
+                <p-accordion>
+                  <div *ngFor="let job of problem.jobs">
+                    <p-accordionTab [header]="'Робота' + job.id">
+                      <h6>Тривалість виконання</h6>
+                      {{job.duration}}
+                    </p-accordionTab>
+                  </div>
+                </p-accordion>
+              </p-tabPanel>
+              <p-tabPanel header="Машини">
+                <p-accordion>
+                  <div *ngFor="let machine of problem.machines">
+                    <p-accordionTab [header]="'Машина ' + machine.id">
+                      <h6>Потужність</h6>
+                      {{machine.power}}
+                      <p-accordion>
+                        <p-accordionTab header="Простої">
+                          <p-accordion>
+                            <div *ngFor="let downtime of machine.downtimes">
+                              <p-accordionTab [header]="downtime.id">
+                                <h6>Початок</h6>
+                                {{downtime.start}}
+                                <h6>Тривалість</h6>
+                                {{downtime.duration}}
+                              </p-accordionTab>
+                            </div>
+                          </p-accordion>
+                        </p-accordionTab>
+                      </p-accordion>
+                    </p-accordionTab>
+                  </div>
+                </p-accordion>
+              </p-tabPanel>
+            </p-tabView>
+          </p-accordionTab>
+        </p-accordion>
+        <p-accordion>
+          <p-accordionTab header="Розв'язки">
+            <p-tabView>
+              <p-accordion>
+                <div *ngFor="let solution of problem.solutions">
+                  <p-accordionTab [header]="solution.algorithm + ': ' + solution.answer">
+                    <p-tabView>
+                      {{solution.answer}}
+                    </p-tabView>
+                  </p-accordionTab>
+                  <button type="button" class="btn btn-primary btn-sm margin-10">csv</button>
+                </div>
+              </p-accordion>
+              <!-- <div *ngFor="let solution of problem.solutions">
+                 <h6>{{solution.algorithm}}: {{solution.answer}}</h6>
+               </div>-->
+            </p-tabView>
+          </p-accordionTab>
+        </p-accordion>
+        <h4>Розв'язати задачу</h4>
+        <div class="row">
+          <label>Повторів:</label>
+          <input type="text" class="form-control">
+          <label>Ітерацій:</label>
+          <input type="text" class="form-control">
+          <label>Максимальний час в секундах:</label>
+          <input type="text" class="form-control">
+          <label>Максимум пасивних ітерацій:</label>
+          <input type="text" class="form-control">
+          <div class="alert alert-info margin-10" role="alert">
+            <p-checkbox class="col-12" name="groupname" value="ris" label="Алгоритм знаходження початкового розв’язку"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+          </div>
+          <div class="alert alert-info margin-10"  role="alert">
+            <p-checkbox class="col-12" name="groupname" value="mis"
+                        label="Модифікований алгоритм знаходження початкового розв’язку"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+          </div>
+          <div class="alert alert-info" role="alert">
+            <p-checkbox class="col-12" name="groupname" value="ps" label="Локальний пошук"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+          </div>
+          <div class="alert alert-info" role="alert">
+            <p-checkbox class="col-12" name="groupname" value="ts" label="Табу-пошук"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+            <br>
+            <label>Відсоток комірок в околі:</label>
+            <input type="text" class="form-control">
+          </div>
+          <div class="alert alert-info" role="alert">
+            <p-checkbox class="col-12" name="groupname" value="gs" label="Генетичний алгоритм"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+            <br>
+            <label>Розмір популяції:</label>
+            <input type="text" class="form-control">
+            <label>Ймовірність мутації:</label>
+            <input type="text" class="form-control">
+            <label>Кількість мутуючих генів:</label>
+            <input type="text" class="form-control">
+          </div>
+          <div class="alert alert-info" role="alert">
+            <p-checkbox class="col-12" name="groupname" value="ms" label="Міметичний алгоритм"
+                        [(ngModel)]="algorithmSelectedValues"></p-checkbox>
+            <br>
+            <label>Розмір популяції:</label>
+            <input type="text" class="form-control">
+            <label>Ймовірність мутації:</label>
+            <input type="text" class="form-control">
+            <label>Кількість мутуючих генів:</label>
+            <input type="text" class="form-control">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="resolve()">Розв'зати</button>
+      </p-accordionTab>
+    </p-accordion>
   </div>
-</ngb-accordion>
+</div>
+
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Створити задачу</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group">
+      <label for="jobAmount">Назва роботи:</label>
+      <input type="text" class="form-control" id="name" [(ngModel)]="parametersForGeneration.name" #jobAmount="ngModel"
+             value="Problem">
+      <label for="name">Кількість робіт:</label>
+      <input type="number" class="form-control" id="jobAmount" [(ngModel)]="parametersForGeneration.jobAmount"
+             #jobAmount="ngModel" value="100">
+      <label for="averageDuration">Середня тривалість роботи:</label>
+      <input type="number" class="form-control" id="averageDuration"
+             [(ngModel)]="parametersForGeneration.averageDuration" #averageDuration="ngModel" value="15">
+      <label for="machineAmount">Кількість машин:</label>
+      <input type="number" class="form-control" id="machineAmount" [(ngModel)]="parametersForGeneration.machineAmount"
+             #machineAmount="ngModel" value="10">
+    </div>
+    <div class="form-group">
+      <label for="maxPower">Максимальна потужність:</label>
+      <input type="number" class="form-control" id="maxPower" [(ngModel)]="parametersForGeneration.maxPower"
+             #maxPower="ngModel" value="3">
+      <label for="downtimeProbability">Імовірність появи простою:</label>
+      <input type="number" class="form-control" id="downtimeProbability"
+             [(ngModel)]="parametersForGeneration.downtimeProbability" #downtimeProbability="ngModel" value="0.3">
+      <label for="averageDowntime">Середній час простою:</label>
+      <input type="number" class="form-control" id="averageDowntime"
+             [(ngModel)]="parametersForGeneration.averageDowntime" #averageDowntime="ngModel" value="5">
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Відмінити</button>
+    <button type="button" class="btn btn-primary" (click)="createProblem()">Створити задачу</button>
+  </div>
+</ng-template>
+
+<ng-template #content2 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">Створити задачу</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label for="name">Назва задачі:</label>
+    <input type="number" class="form-control margin-10">
+    <div class="form-group margin-10">
+      <div class="alert alert-success" role="alert">
+        <h3>Додати роботу</h3>
+        <label for="jobAmount">Тривалість виконання:</label>
+        <input type="text" class="form-control">
+        <button pButton class="margin-10" type="button" label="Додати"></button>
+      </div>
+
+      <div class="alert alert-success" role="alert">
+        <h3>Додати машину</h3>
+        <label for="jobAmount">Потужність:</label>
+        <input type="text" class="form-control">
+        <div class="alert alert-info margin-10" role="alert">
+          <h3>Додати простій</h3>
+          <label for="jobAmount">Початок:</label>
+          <input type="text" class="form-control">
+          <label for="jobAmount">Тривалість:</label>
+          <input type="text" class="form-control">
+          <button pButton class="margin-10" type="button" label="Додати"></button>
+        </div>
+        <button pButton type="button" label="Додати"></button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Відмінити</button>
+    <button type="button" class="btn btn-primary" (click)="createProblem()">Створити задачу</button>
+  </div>
+</ng-template>

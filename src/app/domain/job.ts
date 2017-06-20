@@ -3,6 +3,5 @@
  */
 export class Job {
   id: number;
-  startTime: number;
   duration: number
 }

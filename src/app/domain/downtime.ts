@@ -3,6 +3,6 @@
  */
 export class Downtime {
   id: number;
-  startTime: number;
+  start: number;
   duration: number
 }
